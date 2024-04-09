@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect and XSS Testing Software</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"] {
+            width: calc(100% - 42px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+        .btn-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 150px; /* Fixed width for both buttons */
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .link-container {
+            margin-top: 20px;
+        }
+        .link-container a {
+            display: block;
+            margin-bottom: 10px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            word-break: break-all;
+            transition: color 0.3s; /* Smooth transition for color change */
+        }
+        .link-container a:hover {
+            color: #0056b3; /* Change color on hover */
+        }
+        .link-container a.clicked {
+            color: black; /* Change color when clicked */
+        }
+        .open-links-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: auto; /* Auto width for all buttons */
+            height: 40px; /* Fixed height for all buttons */
+            display: inline-block; /* Display buttons inline */
+        }
+        .open-links-btn:hover {
+            background-color: #218838;
+        }
+        .open-links-btn.clicked {
+            background-color: #343a40;
+        }
+        .powered-by {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Redirect and XSS Testing Software</h1>
+        <input type="text" id="inputText" placeholder="Enter text containing URL">
+        <div class="btn-container">
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/redirect/main/payloads.txt')">Open Redirect</button>
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/redirect/main/xss.txt')">XSS</button>
+        </div>
+        <div id="outputLinks" class="link-container"></div>
+        <div class="powered-by">Powered by Professor Cyber Agency</div>
+    </div>
+
+    <script>
+        function replaceURL(url) {
+            var inputText = document.getElementById('inputText').value.trim(); // Get user input
+            var urlRegex = /((https?|ftp):\/\/[^\s/$.?#].[^\s]*)/; // Regular expression to match URL
+            var match = inputText.match(urlRegex); // Find the match
+            
+            if (match) {
+                var urlToReplace = match[1]; // Extract the URL from the match
+                fetch(url) // Fetch the payloads file
+                    .then(response => response.text())
+                    .then(data => {
+                        var replacedText = data.replace(/URL=/g, urlToReplace); // Replace all occurrences of 'URL=' with the user-provided URL
+                        var lines = replacedText.split('\n'); // Split the text into lines
+                        var output = ''; // Initialize the output
+                        for (var i = 0; i < lines.length; i++) {
+                            output += `<a href="${lines[i]}" target="_blank">${lines[i]}</a>`; // Create clickable links for each line
+                            if ((i + 1) % 10 === 0 && i !== lines.length - 1) { // Add button after every 10 links
+                                output += `<button id="btn_${i}" class="open-links-btn" onclick="openLinks(${i - 9}, ${i + 1}, 'btn_${i}')">Open Links ${i - 8} - ${i + 1}</button>`;
+                            }
+                        }
+                        document.getElementById('outputLinks').innerHTML = output; // Display the links
+                        
+                        // Add event listeners to links for color change on click
+                        var links = document.querySelectorAll('.link-container a');
+                        links.forEach(link => {
+                            link.addEventListener('click', function() {
+                                this.classList.add('clicked'); // Change color to black when clicked
+                            });
+                        });
+                    })
+                    .catch(error => console.error('Error fetching payloads:', error));
+            } else {
+                alert('No URL found in the input text!');
+            }
+        }
+
+        function openLinks(startIndex, endIndex, btnId) {
+            var links = document.getElementsByTagName('a');
+            for (var i = startIndex; i < endIndex; i++) {
+                window.open(links[i].href, '_blank');
+            }
+            document.getElementById(btnId).classList.add('clicked'); // Change button color to black
+        }
+    </script>
+</body>
+</html>
