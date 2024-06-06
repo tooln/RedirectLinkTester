@@ -13,6 +13,7 @@ URL=.in
 URL=%2ein
 URL=%252ein
 URL=%2f%2fevil%E3%80%82com
+URL=%2f%09%2fevil%E3%80%82com
 URL=\/\/google.com/
 URL=%2f%2fevil%2ecom
 URL=%2f%2fevil%252ecom
