@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/3/34/Icon_hacker.png">
+    <title>Link Tester Online</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 40px);
+            padding: 12px 20px;
+            margin: 15px 0;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        .btn-container {
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 0 10px;
+            width: 180px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .link-container {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .link-container a {
+            display: block;
+            margin-bottom: 12px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .link-container a:hover {
+            color: #0056b3;
+        }
+
+        .link-container a.clicked {
+            color: red;
+        }
+
+        .open-links-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            width: auto;
+        }
+
+        .open-links-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .open-links-btn.clicked {
+            background-color: red;
+        }
+
+        .powered-by {
+            font-size: 14px;
+            color: #888;
+            margin-top: 30px;
+            font-weight: 500;
+        }
+
+        .powered-by a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .powered-by a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Redirect and XSS Scanner</h1>
+        <p>Comprehensive Web-Based Tool for Open Redirect and XSS Vulnerability Testing</p>
+        <input type="text" id="inputText" placeholder="Enter text containing URL">
+        <div class="btn-container">
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/redirect/main/payloads.txt', 'redirect')">Open Redirect</button>
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/redirect/main/xss.txt', 'xss')">XSS</button>
+        </div>
+        <div id="outputLinks" class="link-container"></div>
+        <div class="powered-by">Powered by <a href="https://bughuntar.com" target="_blank">Professor Software Solutions</a></div>
+    </div>
+
+    <script>
+        function replaceURL(url, type) {
+            var inputText = document.getElementById('inputText').value.trim(); // Get user input
+            var urlRegex = /((https?|ftp):\/\/[^\s/$.?#].[^\s]*)/; // Regular expression to match URL
+            var match = inputText.match(urlRegex); // Find the match
+            
+            if (match) {
+                var urlToReplace = match[1]; // Extract the URL from the match
+                var userDomain = prompt("Enter your domain name:");
+                if (userDomain != null && userDomain !== "") {
+                    var domainRegex = /(www\.whitelisteddomain\.tld)/g;
+                    fetch(url) // Fetch the payloads file
+                        .then(response => response.text())
+                        .then(data => {
+                            var replacedText = data.replace(/URL=/g, urlToReplace); // Replace all occurrences of 'URL=' with the user-provided URL
+                            replacedText = replacedText.replace(domainRegex, userDomain);
+                            var lines = replacedText.split('\n'); // Split the text into lines
+                            var output = ''; // Initialize the output
+                            for (var i = 0; i < lines.length; i++) {
+                                output += `<a href="${lines[i]}" target="_blank">${lines[i]}</a>`; // Create clickable links for each line
+                                if ((i + 1) % 10 === 0 && i !== lines.length - 1) { // Add button after every 10 links
+                                    output += `<button id="btn_${i}" class="open-links-btn" onclick="openLinks(${i - 9}, ${i + 1}, 'btn_${i}')">Open Links ${i - 8} - ${i + 1}</button>`;
+                                }
+                            }
+                            document.getElementById('outputLinks').innerHTML = output; // Display the links
+
+                            // Add event listeners to links for color change on click
+                            var links = document.querySelectorAll('.link-container a');
+                            links.forEach(link => {
+                                link.addEventListener('click', function() {
+                                    this.classList.add('clicked'); // Change color to black when clicked
+                                });
+                            });
+                        })
+                        .catch(error => console.error('Error fetching payloads:', error));
+                } else {
+                    alert('Domain name cannot be empty!');
+                }
+            } else {
+                alert('No URL found in the input text!');
+            }
+        }
+
+        function openLinks(startIndex, endIndex, btnId) {
+            var links = document.getElementsByTagName('a');
+            for (var i = startIndex; i < endIndex; i++) {
+                window.open(links[i].href, '_blank');
+            }
+            document.getElementById(btnId).classList.add('clicked'); // Change button color to black
+        }
+    </script>
+</body>
+</html>
