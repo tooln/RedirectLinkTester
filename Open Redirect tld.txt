@@ -1,0 +1,15 @@
+URL=%2ein
+URL=%252eevil.com
+URL=%25252eevil.com
+URL=%2f%2fevil%E3%80%82com
+URL=%2f%09%2fevil%E3%80%82com
+URL=%E3%80%82com
+URL=%5c/evil.com
+URL=/%09/evil.com
+URL=////evil.com
+URL=%2f%2f%09%2fevil%2ecom
+URL=%2f%2fgoogle%2ecom
+URL=?example.com
+URL=%23evil.com
+URL=°evil.com
+URL=%E3%80%82%23in
