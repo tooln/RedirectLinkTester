@@ -205,7 +205,12 @@
             <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/RedirectLinkTester/refs/heads/main/tld_payloads.txt', 'tld')">TLD Modifier</button>
         </div>
         <div id="outputLinks" class="link-container"></div>
-        <div class="powered-by">Powered by <a href="https://bughuntar.com" target="_blank">Professor Software Solutions</a> | Version <span onclick="showVersionInfo()">2.0</span></div>
+        <div class="powered-by">
+          <span>&#169; 2025 <a href="https://bughuntar.com" target="_blank" rel="noopener noreferrer">Professor Software Solutions</a>. All rights reserved.</span> | 
+          <span onclick="showVersionInfo()" style="cursor: pointer;">Version 2.0</span> | 
+          <a href="mailto:support@bughuntar.com" target="_blank" rel="noopener noreferrer">Support Email</a> | 
+          <a href="https://bughuntar.com/contacts/" target="_blank" rel="noopener noreferrer">Contact Us</a>
+        </div>
     </div>
 
     <button class="clear-btn" onclick="clearStorage()">🗑️</button>
@@ -224,7 +229,7 @@
             <p>We hope you find these improvements helpful for your security testing needs!</p>
             <p> Release Date: Mar 10, 2025 7:52 AM</p>
         </div>
-        <button class="close-btn" onclick="closeVersionPopup()">Close</button>
+        <button class="close-btn" onclick="closeVersionPopup()">Hide</button>
     </div>
 
     <script>
