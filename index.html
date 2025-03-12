@@ -1,0 +1,364 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/3/34/Icon_hacker.png">
+    <title>Link Tester Online</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 40px);
+            padding: 12px 20px;
+            margin: 15px 0;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+
+        .btn-container {
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 0 10px;
+            width: 180px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .link-container {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .link-container a {
+            display: block;
+            margin-bottom: 12px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .link-container a:hover {
+            color: #0056b3;
+        }
+
+        .link-container a.clicked {
+            color: red;
+        }
+
+        .open-links-btn {
+            background-color: #28a745;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            width: auto;
+        }
+
+        .open-links-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+        .open-links-btn.clicked {
+    background-color: red !important;  /* Ensures button turns red after being clicked */
+    transform: scale(1.05);  /* Maintain hover effect when clicked */
+}
+
+        .powered-by {
+            font-size: 14px;
+            color: #888;
+            margin-top: 30px;
+            font-weight: 500;
+        }
+
+        .powered-by a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .powered-by a:hover {
+            color: #0056b3;
+        }
+
+        .clear-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background-color: #cc0000;
+            transform: scale(1.1);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .popup .popup-header {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .popup .popup-content {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .popup .close-btn {
+            padding: 8px 12px;
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .popup .close-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Redirect and XSS Scanner</h1>
+        <p>Comprehensive Web-Based Tool for Open Redirect and XSS Vulnerability Testing</p>
+        <input type="text" id="inputText" placeholder="Enter Redirect URL">
+        <input type="text" id="domainInput" placeholder="Enter Allowed Domain">
+        <div class="btn-container">
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/redirect/main/payloads.txt', 'redirect')">Open Redirect</button>
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/redirect/main/xss.txt', 'xss')">XSS</button>
+            <button class="btn" onclick="replaceURL('https://raw.githubusercontent.com/tooln/RedirectLinkTester/refs/heads/main/tld_payloads.txt', 'tld')">TLD Modifier</button>
+        </div>
+        <div id="outputLinks" class="link-container"></div>
+        <div class="powered-by">
+          <span>&#169; 2025 <a href="https://bughuntar.com" target="_blank" rel="noopener noreferrer">Professor Software Solutions</a>. All rights reserved.</span> | 
+          <span onclick="showVersionInfo()" style="cursor: pointer;">Version 2.0</span> | 
+          <a href="mailto:support@bughuntar.com" target="_blank" rel="noopener noreferrer">Support Email</a> | 
+          <a href="https://bughuntar.com/contacts/" target="_blank" rel="noopener noreferrer">Contact Us</a>
+        </div>
+    </div>
+
+    <button class="clear-btn" onclick="clearStorage()">🗑️</button>
+
+    <!-- Version Popup -->
+    <div id="versionPopup" class="popup">
+        <div class="popup-header">Version 2.0 - Link Tester Tool</div>
+        <div class="popup-content">
+            <p>Welcome to version 2.0 of the Link Tester Online tool! In this version, we've made significant improvements:</p>
+            <ul>
+                <li>Added the ability to handle Open Redirect and XSS payloads.</li>
+                <li>Improved UI design and enhanced usability.</li>
+                <li>Links can now be saved and clicked, with their states persisted across sessions.</li>
+                <li>Pagination added for displaying links in manageable chunks.</li>
+            </ul>
+            <p>We hope you find these improvements helpful for your security testing needs!</p>
+            <p> Release Date: Mar 10, 2025 7:52 AM</p>
+        </div>
+        <button class="close-btn" onclick="closeVersionPopup()">Hide</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            restoreInputFields();
+        };
+
+        function restoreInputFields() {
+            if (localStorage.getItem('inputText')) {
+                document.getElementById('inputText').value = localStorage.getItem('inputText');
+            }
+            if (localStorage.getItem('domainInput')) {
+                document.getElementById('domainInput').value = localStorage.getItem('domainInput');
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('inputText', document.getElementById('inputText').value);
+            localStorage.setItem('domainInput', document.getElementById('domainInput').value);
+        }
+
+        function replaceURL(url, type) {
+            var inputText = document.getElementById('inputText').value.trim();
+            var domainName = document.getElementById('domainInput').value.trim();
+            var urlRegex = /((https?|ftp):\/\/[^\s/$.?#].[^\s]*)/;
+            var match = inputText.match(urlRegex);
+
+            if (match) {
+                var urlToReplace = match[1];
+
+                if (domainName !== "") {
+                    var domainRegex = /(www\.whitelisteddomain\.tld)/g;
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(data => {
+                            var replacedText = data.replace(/URL=/g, urlToReplace);
+                            replacedText = replacedText.replace(domainRegex, domainName);
+                            var lines = replacedText.split('\n');
+                            var output = '';
+                            var links = [];
+
+                            for (var i = 0; i < lines.length; i++) {
+                                output += `<a href="${lines[i]}" target="_blank" class="link">${lines[i]}</a>`;
+                                links.push({ href: lines[i], clicked: false });
+                                if ((i + 1) % 10 === 0 && i !== lines.length - 1) {
+                                    output += `<button id="btn_${i}" class="open-links-btn" onclick="openLinks(${i - 9}, ${i + 1}, 'btn_${i}')">Open Links ${i - 8} - ${i + 1}</button>`;
+                                }
+                            }
+
+                            // Handle remaining links if any
+                            if (lines.length % 10 !== 0) {
+                                output += `<button id="btn_last" class="open-links-btn" onclick="openLinks(${Math.floor(lines.length / 10) * 10}, ${lines.length}, 'btn_last')">Open Last ${lines.length % 10} Links</button>`;
+                            }
+
+                            document.getElementById('outputLinks').innerHTML = output;
+                            saveToLocalStorage();
+                            addLinkEventListeners();
+                        })
+                        .catch(error => console.error('Error fetching payloads:', error));
+                } else {
+                    alert('Domain name cannot be empty!');
+                }
+            } else {
+                alert('No URL found in the input text!');
+            }
+        }
+
+        function addLinkEventListeners() {
+            var links = document.querySelectorAll('.link-container a');
+            links.forEach(link => {
+                link.addEventListener('click', function() {
+                    this.classList.add('clicked');
+                    saveLinkColors();
+                });
+            });
+        }
+
+        function saveLinkColors() {
+            var linkColors = [];
+            var links = document.querySelectorAll('.link-container a');
+            links.forEach(link => {
+                linkColors.push({ href: link.href, class: link.className });
+            });
+            localStorage.setItem('linkColors', JSON.stringify(linkColors));
+        }
+
+function openLinks(startIndex, endIndex, btnId) {
+    var links = document.getElementsByTagName('a');
+    for (var i = startIndex; i < endIndex; i++) {
+        window.open(links[i].href, '_blank');
+    }
+    document.getElementById(btnId).classList.add('clicked');
+    saveButtonState(btnId);
+
+    // Change the button color to red after it's clicked
+    document.getElementById(btnId).style.backgroundColor = 'red';
+}
+
+
+        function saveButtonState(btnId) {
+            var buttons = JSON.parse(localStorage.getItem('buttonStates')) || [];
+            const buttonIndex = buttons.findIndex(button => button.id === btnId);
+
+            if (buttonIndex !== -1) {
+                buttons[buttonIndex].clicked = true;
+            } else {
+                buttons.push({ id: btnId, clicked: true });
+            }
+
+            localStorage.setItem('buttonStates', JSON.stringify(buttons));
+        }
+
+        function showVersionInfo() {
+            document.getElementById('versionPopup').style.display = 'block';
+        }
+
+        function closeVersionPopup() {
+            document.getElementById('versionPopup').style.display = 'none';
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+</html>
