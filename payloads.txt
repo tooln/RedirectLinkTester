@@ -22,6 +22,7 @@ URL=///3627734862/
 URL=//noexist
 URL=HTTP//noexist
 URL=https://evil.com%5C%40www.whitelisteddomain.tld
+URL=https://evil.com%5C?%40www.whitelisteddomain.tld
 URL=https://evil.com\@www.whitelisteddomain.tld
 URL=http://www.whitelisteddomain.tld@0xd8.0x3a.0xd6.0xce
 URL=https://evil.com
